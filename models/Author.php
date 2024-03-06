@@ -58,7 +58,7 @@ class Author
         if ($stmt->execute()) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $returnedID = $row['id'];
-            return "created author ($returnedID, $this->author";
+            return "created author ($returnedID, $this->author)";
         } else {
             return 'could not create author';
         }
