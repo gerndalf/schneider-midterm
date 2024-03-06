@@ -29,7 +29,7 @@ class Category
     //Get single category
     public function read_single()
     {
-        $query = 'SELECT id, category FROM ' . $this->table . ' WHERE id = ? LIMIT 0,1';
+        $query = 'SELECT id, category FROM ' . $this->table . ' WHERE id = ? LIMIT 1';
 
         $stmt = $this->conn->prepare($query);
 

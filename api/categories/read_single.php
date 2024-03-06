@@ -1,7 +1,7 @@
 <?php
 
-include_once './config/Database.php';
-include_once './models/Category.php';
+include_once '../../config/Database.php';
+include_once '../../models/Category.php';
 
 //Instantiate DB/connect
 $database = new Database();
@@ -23,7 +23,7 @@ $category_arr = array(
 );
 
 //Output JSON
-if ($category_array->count > 0) {
+if (count($category_arr) > 0) {
     echo json_encode($category_arr);
 } else {
     echo json_encode(
