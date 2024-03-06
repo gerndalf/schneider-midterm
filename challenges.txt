@@ -1,0 +1,7 @@
+In the beginning, my primary difficulty came from trying to adapt thinking about pushing HTTP requests
+to an index.php rather than using separate URLs. Proper checks and includes make this easier than initially
+expected but is an overall much easier and more streamlined way of performing operations.
+
+It took some decent time fully understanding the required API responses to certain operations (i.e. returning
+feedback rather than just data). There was definitely some back and forth deciding where and how I wanted
+these responses to be given.
