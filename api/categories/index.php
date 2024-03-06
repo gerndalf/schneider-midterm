@@ -12,7 +12,7 @@ if ($method === 'OPTIONS') {
 if ($method === 'GET' && isset($_GET['id'])) {
     //Read single category
     include_once 'read_single.php';
-} else {
+} else if ($method === 'GET') {
     //Read all categories
     include_once 'read.php';
 }

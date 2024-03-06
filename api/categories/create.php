@@ -1,7 +1,7 @@
 <?php
 
-include_once './config/Database.php';
-include_once './models/Category.php';
+include_once '../../config/Database.php';
+include_once '../../models/Category.php';
 
 //Instantiate DB/connect
 $database = new Database();
@@ -13,7 +13,7 @@ $category = new Category($db);
 //Get input data
 $data = json_decode(file_get_contents("php://input"));
 
-if (!!$data->category) {
+if (is_null($data->category)) {
     echo json_encode(
         array('message' => 'Missing Required Parameters')
     );

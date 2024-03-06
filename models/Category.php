@@ -45,7 +45,7 @@ class Category
     //Create new category
     public function create()
     {
-        $query = 'INSERT INTO ' . $this->table . ' SET category = :category';
+        $query = 'INSERT INTO ' . $this->table . '(category) VALUES (:category) RETURNING id';
 
         $stmt = $this->conn->prepare($query);
 
@@ -56,7 +56,9 @@ class Category
 
         //Attempt execute
         if ($stmt->execute()) {
-            return "created category ($this->id, $this->category)";
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $returnedID = $row['id'];
+            return "created category ($returnedID, $this->category)";
         } else {
             return 'could not create category';
         }
