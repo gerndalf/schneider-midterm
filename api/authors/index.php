@@ -12,7 +12,7 @@ if ($method === 'OPTIONS') {
 if ($method === 'GET' && isset($_GET['id'])) {
     //Read single author
     include_once 'read_single.php';
-} else {
+} else if ($method === 'GET') {
     //Read all authors
     include_once 'read.php';
 }
