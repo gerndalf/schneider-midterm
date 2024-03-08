@@ -87,7 +87,7 @@ class Quote
         $stmt->bindParam(':author_id', $this->author_id);
         $stmt->bindParam(':category_id', $this->category_id);
 
-        //TODO: Test if invalid author or category id (i.e. their is input but no such author/category exists in db).
+        //TODO: Test if invalid author or category id (i.e. their is input but no such author/category exists in db). If working, apply to update() function as well.
         //Attempt execute
         if ($stmt->execute()) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -119,6 +119,7 @@ class Quote
         }
     }
 
+    //TODO: Account for invalid foreign keys!
     //Update existing quote
     public function update()
     {
