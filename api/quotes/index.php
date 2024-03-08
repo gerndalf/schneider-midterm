@@ -12,7 +12,7 @@ if ($method === 'OPTIONS') {
 if ($method === 'GET' && isset($_GET['id'])) {
     //Read single quote
     include_once 'read_single.php';
-} else {
+} elseif ($method === 'GET') {
     //Read all quotes
     include_once 'read.php';
 }

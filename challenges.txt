@@ -5,3 +5,16 @@ expected but is an overall much easier and more streamlined way of performing op
 It took some decent time fully understanding the required API responses to certain operations (i.e. returning
 feedback rather than just data). There was definitely some back and forth deciding where and how I wanted
 these responses to be given.
+
+I completed CRUD code for Authors and Categories first as they seemed like a good way to 
+warm up and get a confident sense of how flow works using these slightly different endpoints.
+
+As expected, it was a bit tricky making sure I accounted for all the different query combinations
+(search by foreign key combinations). It definitely seemed a tad goofy working with string
+concatination to assemble the queries.
+
+Finally, the largest hurdle by far was determining which foreign key was violated when incorrectly creating a quote.
+To pass requirements, we need to provide proper feedback if the user attempts to create a quote with an invalid 
+author or category foreign key. This required some serious digging into SQL error reporting to find which type 
+of error was for foreign keys and even more digging to find the perfect PHP function to accurately determine 
+which particular key had the violation.

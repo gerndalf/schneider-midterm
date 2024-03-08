@@ -22,11 +22,21 @@ $category_arr = array(
     'category' => $category->category
 );
 
-//Output JSON
-if (count($category_arr) > 0) {
-    echo json_encode($category_arr);
-} else {
+
+//TODO: Test if this works! If working, spread to two other read_single.php files
+if (is_null($category_arr['id']) || is_null($category_arr['category'])) {
     echo json_encode(
         array('message' => 'category_id Not Found')
     );
+} else {
+    echo json_encode($category_arr);
 }
+
+//Output JSON
+// if (count($category_arr) > 0) {
+//     echo json_encode($category_arr);
+// } else {
+//     echo json_encode(
+//         array('message' => 'category_id Not Found')
+//     );
+// }

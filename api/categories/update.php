@@ -14,13 +14,7 @@ $category = new Category($db);
 $data = json_decode(file_get_contents("php://input"));
 
 //Check for required params
-if (is_null($data->id)) {
-    echo json_encode(
-        array('message' => 'category_id Not Found')
-    );
-}
-
-if (is_null($data->category)) {
+if (is_null($data->id) || is_null($data->category)) {
     echo json_encode(
         array('message' => 'Missing Required Parameters')
     );
