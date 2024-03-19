@@ -58,9 +58,13 @@ class Author
         if ($stmt->execute()) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $returnedID = $row['id'];
-            return "created author ($returnedID, $this->author)";
+            return json_encode(
+                array('message' => "created author ($returnedID, $this->author)")
+            );
         } else {
-            return 'could not create author';
+            return json_encode(
+                array('message' => 'could not create author')
+            );
         }
     }
 
@@ -80,10 +84,14 @@ class Author
         $stmt->bindParam(':id', $this->id);
 
         //Attempt execute
-        if ($stmt->execute()) {
-            return "updated author ($this->id, $this->author)";
+        if ($stmt->execute() && $stmt->rowCount() > 0) {
+            return json_encode(
+                array('message' => "updated author ($this->id, $this->author)")
+            );
         } else {
-            return 'could not update category';
+            return json_encode(
+                array('message' => 'No Authors Found')
+            );
         }
     }
 
@@ -101,7 +109,9 @@ class Author
 
         //Attempt execute
         if ($stmt->execute()) {
-            return "$this->id";
+            return json_encode(
+                array('message' => "$this->id")
+            );
         } else {
             return json_encode(
                 array('message' => 'No Authors Found')

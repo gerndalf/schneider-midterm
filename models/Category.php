@@ -58,9 +58,13 @@ class Category
         if ($stmt->execute()) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $returnedID = $row['id'];
-            return "created category ($returnedID, $this->category)";
+            return json_encode(
+                array('message' => "created category ($returnedID, $this->category)")
+            );
         } else {
-            return 'could not create category';
+            return json_encode(
+                array('message' => 'could not create category')
+            );
         }
     }
 
@@ -80,10 +84,14 @@ class Category
         $stmt->bindParam(':id', $this->id);
 
         //Attempt execute
-        if ($stmt->execute()) {
-            return "updated category ($this->id, $this->category)";
+        if ($stmt->execute() && $stmt->rowCount() > 0) {
+            return json_encode(
+                array('message' => "updated category ($this->id, $this->category)")
+            );
         } else {
-            return 'could not update category';
+            return json_encode(
+                array('message' => 'No Categories Found')
+            );
         }
     }
 
@@ -101,7 +109,9 @@ class Category
 
         //Attempt execute
         if ($stmt->execute()) {
-            return "$this->id";
+            return json_encode(
+                array('message' => "$this->id")
+            );
         } else {
             return json_encode(
                 array('message' => 'No Categories Found')

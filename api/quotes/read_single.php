@@ -18,14 +18,17 @@ $quote->read_single();
 
 //Create output array
 $quote_arr = array(
-    'quote' => $quote->quote
+    'id' => $quote->id,
+    'quote' => $quote->quote,
+    'author' => $quote->author,
+    'category' => $quote->category
 );
 
 //Output JSON
-if (count($quote_arr) > 0) {
-    echo json_encode($quote_arr);
-} else {
+if (is_null($quote_arr['quote'])) {
     echo json_encode(
         array('message' => 'No Quotes Found')
     );
+} else {
+    echo json_encode($quote_arr);
 }

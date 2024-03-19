@@ -23,10 +23,10 @@ $author_arr = array(
 );
 
 //Output JSON
-if (count($author_arr) > 0) {
-    echo json_encode($author_arr);
-} else {
+if (is_null($author_arr['author'])) {
     echo json_encode(
         array('message' => 'author_id Not Found')
     );
+} else {
+    echo json_encode($author_arr);
 }

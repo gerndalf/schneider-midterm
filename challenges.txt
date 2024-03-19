@@ -13,8 +13,9 @@ As expected, it was a bit tricky making sure I accounted for all the different q
 (search by foreign key combinations). It definitely seemed a tad goofy working with string
 concatination to assemble the queries.
 
-Finally, the largest hurdle by far was determining which foreign key was violated when incorrectly creating a quote.
+The largest hurdle by far was determining which foreign key was violated when incorrectly creating a quote.
 To pass requirements, we need to provide proper feedback if the user attempts to create a quote with an invalid 
 author or category foreign key. This required some serious digging into SQL error reporting to find which type 
 of error was for foreign keys and even more digging to find the perfect PHP function to accurately determine 
 which particular key had the violation.
+

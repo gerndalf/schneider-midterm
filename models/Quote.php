@@ -8,7 +8,9 @@ class Quote
     //Obj Props
     public $id;
     public $quote;
+    public $author;
     public $author_id;
+    public $category;
     public $category_id;
 
     public function __construct($db)
@@ -19,7 +21,13 @@ class Quote
     //Get quotes depending on ID inputs
     public function read()
     {
-        $query = 'SELECT quote FROM ' . $this->table;
+        $query = '
+            SELECT quotes.id, quotes.quote, authors.author, categories.category
+            FROM ' . $this->table . '
+            JOIN authors
+            ON quotes.author_id = authors.id
+            JOIN categories
+            ON quotes.category_id = categories.id';
         $bindings = [];
 
         //Statement prep & execute
@@ -45,7 +53,7 @@ class Quote
         //Bind all params
         if (count($bindings) > 0) {
             foreach ($bindings as $key => $value) {
-                $stmt->bindParam($key + 1, $value);
+                $stmt->bindValue($key + 1, $value);
             }
         }
         $stmt->execute();
@@ -56,7 +64,15 @@ class Quote
     //Get single quote
     public function read_single()
     {
-        $query = 'SELECT quote FROM ' . $this->table . ' WHERE id = ? LIMIT 1';
+        $query = '
+            SELECT quotes.id, quotes.quote, authors.author, categories.category 
+            FROM ' . $this->table . '
+            JOIN authors
+            ON quotes.author_id = authors.id
+            JOIN categories
+            ON quotes.category_id = categories.id
+            WHERE quotes.id = ? 
+            LIMIT 1';
 
         $stmt = $this->conn->prepare($query);
 
@@ -67,8 +83,8 @@ class Quote
 
         $this->id = $row['id'];
         $this->quote = $row['quote'];
-        $this->author_id = $row['author_id'];
-        $this->category_id = $row['category_id'];
+        $this->author = $row['author'];
+        $this->category = $row['category'];
     }
 
     //Create new quote
@@ -87,24 +103,30 @@ class Quote
         $stmt->bindParam(':author_id', $this->author_id);
         $stmt->bindParam(':category_id', $this->category_id);
 
-        //TODO: Test if invalid author or category id (i.e. their is input but no such author/category exists in db). If working, apply to update() function as well.
         //Attempt execute
-        if ($stmt->execute()) {
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $returnedID = $row['id'];
-            return "created quote ($returnedID, $this->quote, $this->author_id, $this->category_id";
-        } else {
+        try {
+            if ($stmt->execute()) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $returnedID = $row['id'];
+                return json_encode(
+                    array('message' => "created quote ($returnedID, $this->quote, $this->author_id, $this->category_id)")
+                );
+            } else {
+                return json_encode(
+                    array('message' => 'could not create quote')
+                );
+            }
+        } catch (Exception $e) {
             //Check for foreign key failure state
-            $errorInfo = $stmt->errorInfo();
-            if ($errorInfo[0] === '23503') { //23503 is the state error for foreign key violations
-                $errorMessage = $errorInfo[2]; //Pull out message for check
-
-                //strpos() will return false if passed string does not contain indicated phrase
-                if (strpos($errorMessage, 'author_id' !== false)) {
+            $errorCode = $e->getCode();
+            $errorMessage = $e->getMessage();
+            if ($errorCode === '23503') { //23503 is the state error for foreign key violations
+                //stripos() will return false if passed string does not contain indicated phrase
+                if (stripos($errorMessage, 'author_id') !== false) {
                     return json_encode(
                         array('message' => 'author_id Not Found')
                     );
-                } elseif (strpos($errorMessage, 'category_id' !== false)) {
+                } elseif (stripos($errorMessage, 'category_id') !== false) {
                     return json_encode(
                         array('message' => 'category_id Not Found')
                     );
@@ -114,12 +136,11 @@ class Quote
                     );
                 }
             } else {
-                return 'could not create quote';
+                return $errorMessage;
             }
         }
     }
 
-    //TODO: Account for invalid foreign keys!
     //Update existing quote
     public function update()
     {
@@ -149,14 +170,42 @@ class Quote
         //Bind all params
         if (count($bindings) > 0) {
             foreach ($bindings as $key => $value) {
-                $stmt->bindParam($key + 1, $value);
+                $stmt->bindValue($key + 1, $value);
             }
         }
 
-        if ($stmt->execute()) {
-            return "updated quote ($this->id, $this->quote, $this->author_id, $this->category_id)";
-        } else {
-            return 'could not update category';
+        try {
+            if ($stmt->execute() && $stmt->rowCount() > 0) {
+                return json_encode(
+                    array('message' => "updated quote ($this->id, $this->quote, $this->author_id, $this->category_id)")
+                );
+            } else {
+                return json_encode(
+                    array('message' => 'No Quotes Found')
+                );
+            }
+        } catch (Exception $e) {
+            //Check for foreign key failure state
+            $errorCode = $e->getCode();
+            $errorMessage = $e->getMessage();
+            if ($errorCode === '23503') { //23503 is the state error for foreign key violations
+                //stripos() will return false if passed string does not contain indicated phrase
+                if (stripos($errorMessage, 'author_id') !== false) {
+                    return json_encode(
+                        array('message' => 'author_id Not Found')
+                    );
+                } elseif (stripos($errorMessage, 'category_id') !== false) {
+                    return json_encode(
+                        array('message' => 'category_id Not Found')
+                    );
+                } else {
+                    return json_encode(
+                        array('message' => 'unknown foreign key error occurred')
+                    );
+                }
+            } else {
+                return $errorMessage;
+            }
         }
     }
 
@@ -174,7 +223,9 @@ class Quote
 
         //Attempt execute
         if ($stmt->execute()) {
-            return "$this->id";
+            return json_encode(
+                array('message' => "$this->id")
+            );
         } else {
             return json_encode(
                 array('message' => 'No Quotes Found')

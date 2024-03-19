@@ -19,7 +19,6 @@ $num = $result->rowCount();
 //Check for existing authors
 if ($num > 0) {
     $author_array = array();
-    $author_array['data'] = array();
 
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         extract($row);
@@ -30,7 +29,7 @@ if ($num > 0) {
         );
 
         //Store item for results
-        array_push($author_array['data'], $single_author);
+        array_push($author_array, $single_author);
     }
 
     //JSON convert + output
