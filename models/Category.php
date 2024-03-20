@@ -117,12 +117,18 @@ class Category
 
         //Attempt execute
         if ($stmt->execute()) {
-            return json_encode(
-                array('id' => "$this->id")
-            );
+            if ($stmt->rowCount() > 0) {
+                return json_encode(
+                    array('id' => "$this->id")
+                );
+            } else {
+                return json_encode(
+                    array('message' => 'No Categories Found')
+                );
+            }
         } else {
             return json_encode(
-                array('message' => 'No Categories Found')
+                array('message' => 'Query Failed')
             );
         }
     }

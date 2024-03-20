@@ -186,7 +186,12 @@ class Quote
         try {
             if ($stmt->execute() && $stmt->rowCount() > 0) {
                 return json_encode(
-                    array('message' => "updated quote ($this->id, $this->quote, $this->author_id, $this->category_id)")
+                    array(
+                        'id' => $this->id,
+                        'quote' => $this->quote,
+                        'author_id' => $this->author_id,
+                        'category_id' => $this->category_id
+                    )
                 );
             } else {
                 return json_encode(
@@ -231,8 +236,8 @@ class Quote
         $stmt->bindParam(':id', $this->id);
 
         //Attempt execute
-        try {
-            if ($stmt->execute()) {
+        if ($stmt->execute()) {
+            if ($stmt->rowCount() > 0) {
                 return json_encode(
                     array('id' => "$this->id")
                 );
@@ -241,9 +246,9 @@ class Quote
                     array('message' => 'No Quotes Found')
                 );
             }
-        } catch (Exception $e) {
+        } else {
             return json_encode(
-                array('message' => 'No Quotes Found')
+                array('message' => 'Query Failed')
             );
         }
     }

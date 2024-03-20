@@ -117,12 +117,18 @@ class Author
 
         //Attempt execute
         if ($stmt->execute()) {
-            return json_encode(
-                array('id' => "$this->id")
-            );
+            if ($stmt->rowCount() > 0) {
+                return json_encode(
+                    array('id' => "$this->id")
+                );
+            } else {
+                return json_encode(
+                    array('message' => 'No Authors Found')
+                );
+            }
         } else {
             return json_encode(
-                array('message' => 'No Authors Found')
+                array('message' => 'Query Failed')
             );
         }
     }
