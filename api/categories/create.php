@@ -13,7 +13,7 @@ $category = new Category($db);
 //Get input data
 $data = json_decode(file_get_contents("php://input"));
 
-if (is_null($data->category)) {
+if (!isset($data->category)) {
     echo json_encode(
         array('message' => 'Missing Required Parameters')
     );

@@ -236,6 +236,10 @@ class Quote
                 return json_encode(
                     array('id' => "$this->id")
                 );
+            } else {
+                return json_encode(
+                    array('message' => 'No Quotes Found')
+                );
             }
         } catch (Exception $e) {
             return json_encode(

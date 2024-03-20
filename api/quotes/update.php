@@ -14,7 +14,7 @@ $quote = new Quote($db);
 $data = json_decode(file_get_contents("php://input"));
 
 //Check for required params
-if (is_null($data->id) || is_null($data->quote) || is_null($data->author_id) || is_null($data->category_id)) {
+if (!isset($data->id) || !isset($data->quote) || !isset($data->author_id) || !isset($data->category_id)) {
     echo json_encode(
         array('message' => 'Missing Required Parameters')
     );
