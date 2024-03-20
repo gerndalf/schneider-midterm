@@ -38,8 +38,10 @@ class Author
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->id = $row['id'];
-        $this->author = $row['author'];
+        if (is_array($row) && isset($row['id']) && isset($row['author'])) {
+            $this->id = $row['id'];
+            $this->author = $row['author'];
+        }
     }
 
     //Create new author
@@ -59,11 +61,14 @@ class Author
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $returnedID = $row['id'];
             return json_encode(
-                array('message' => "created author ($returnedID, $this->author)")
+                array(
+                    'id' => $returnedID,
+                    'author' => $this->author
+                )
             );
         } else {
             return json_encode(
-                array('message' => 'could not create author')
+                array('message' => 'Missing Required Parameters')
             );
         }
     }
@@ -86,7 +91,10 @@ class Author
         //Attempt execute
         if ($stmt->execute() && $stmt->rowCount() > 0) {
             return json_encode(
-                array('message' => "updated author ($this->id, $this->author)")
+                array(
+                    'id' => $this->id,
+                    'author' => $this->author
+                )
             );
         } else {
             return json_encode(
@@ -110,7 +118,7 @@ class Author
         //Attempt execute
         if ($stmt->execute()) {
             return json_encode(
-                array('message' => "$this->id")
+                array('id' => "$this->id")
             );
         } else {
             return json_encode(

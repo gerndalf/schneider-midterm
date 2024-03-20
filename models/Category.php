@@ -38,8 +38,10 @@ class Category
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->id = $row['id'];
-        $this->category = $row['category'];
+        if (is_array($row) && isset($row['id']) && isset($row['category'])) {
+            $this->id = $row['id'];
+            $this->category = $row['category'];
+        }
     }
 
     //Create new category
@@ -59,11 +61,14 @@ class Category
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $returnedID = $row['id'];
             return json_encode(
-                array('message' => "created category ($returnedID, $this->category)")
+                array(
+                    'id' => $returnedID,
+                    'category' => $this->category
+                )
             );
         } else {
             return json_encode(
-                array('message' => 'could not create category')
+                array('message' => 'Missing Required Parameters')
             );
         }
     }
@@ -86,7 +91,10 @@ class Category
         //Attempt execute
         if ($stmt->execute() && $stmt->rowCount() > 0) {
             return json_encode(
-                array('message' => "updated category ($this->id, $this->category)")
+                array(
+                    'id' => $this->id,
+                    'category' => $this->category
+                )
             );
         } else {
             return json_encode(
@@ -110,7 +118,7 @@ class Category
         //Attempt execute
         if ($stmt->execute()) {
             return json_encode(
-                array('message' => "$this->id")
+                array('id' => "$this->id")
             );
         } else {
             return json_encode(

@@ -81,10 +81,12 @@ class Quote
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->id = $row['id'];
-        $this->quote = $row['quote'];
-        $this->author = $row['author'];
-        $this->category = $row['category'];
+        if (is_array($row) && isset($row['id']) && isset($row['quote']) && isset($row['author']) && isset($row['category'])) {
+            $this->id = $row['id'];
+            $this->quote = $row['quote'];
+            $this->author = $row['author'];
+            $this->category = $row['category'];
+        }
     }
 
     //Create new quote
@@ -109,11 +111,16 @@ class Quote
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 $returnedID = $row['id'];
                 return json_encode(
-                    array('message' => "created quote ($returnedID, $this->quote, $this->author_id, $this->category_id)")
+                    array(
+                        'id' => $returnedID,
+                        'quote' => $this->quote,
+                        'author_id' => $this->author_id,
+                        'category_id' => $this->category_id
+                    )
                 );
             } else {
                 return json_encode(
-                    array('message' => 'could not create quote')
+                    array('message' => 'Missing Required Parameters')
                 );
             }
         } catch (Exception $e) {
@@ -136,7 +143,9 @@ class Quote
                     );
                 }
             } else {
-                return $errorMessage;
+                return json_encode(
+                    array('message' => 'Missing Required Parameters')
+                );
             }
         }
     }
@@ -222,11 +231,13 @@ class Quote
         $stmt->bindParam(':id', $this->id);
 
         //Attempt execute
-        if ($stmt->execute()) {
-            return json_encode(
-                array('message' => "$this->id")
-            );
-        } else {
+        try {
+            if ($stmt->execute()) {
+                return json_encode(
+                    array('id' => "$this->id")
+                );
+            }
+        } catch (Exception $e) {
             return json_encode(
                 array('message' => 'No Quotes Found')
             );
