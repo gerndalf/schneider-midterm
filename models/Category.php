@@ -38,7 +38,7 @@ class Category
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row && isset($row['id']) && isset($row['category'])) {
+        if (is_array($row) && isset($row['id']) && isset($row['category'])) {
             $this->id = $row['id'];
             $this->category = $row['category'];
         }

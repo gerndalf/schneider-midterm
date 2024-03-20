@@ -13,7 +13,7 @@ $author = new Author($db);
 //Get input data
 $data = json_decode(file_get_contents("php://input"));
 
-if (is_null($data->author)) {
+if (!isset($data->author)) {
     echo json_encode(
         array('message' => 'Missing Required Parameters')
     );

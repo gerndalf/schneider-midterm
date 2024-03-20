@@ -14,7 +14,7 @@ $author = new Author($db);
 $data = json_decode(file_get_contents("php://input"));
 
 //Check for required params
-if (is_null($data->id) || is_null($data->author)) {
+if (!isset($data->id) || !isset($data->author)) {
     echo json_encode(
         array('message' => 'Missing Required Parameters')
     );

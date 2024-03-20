@@ -38,7 +38,7 @@ class Author
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row && isset($row['id']) && isset($row['author'])) {
+        if (is_array($row) && isset($row['id']) && isset($row['author'])) {
             $this->id = $row['id'];
             $this->author = $row['author'];
         }
