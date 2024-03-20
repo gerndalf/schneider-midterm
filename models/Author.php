@@ -38,10 +38,9 @@ class Author
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        try {
+        if ($row && isset($row['id']) && isset($row['author'])) {
             $this->id = $row['id'];
             $this->author = $row['author'];
-        } catch (Exception $e) {
         }
     }
 

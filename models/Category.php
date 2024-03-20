@@ -38,10 +38,9 @@ class Category
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        try {
+        if ($row && isset($row['id']) && isset($row['category'])) {
             $this->id = $row['id'];
             $this->category = $row['category'];
-        } catch (Exception $e) {
         }
     }
 

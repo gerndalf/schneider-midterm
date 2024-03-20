@@ -81,12 +81,11 @@ class Quote
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        try {
+        if ($row && isset($row['id']) && isset($row['quote']) && isset($row['author']) && isset($row['category'])) {
             $this->id = $row['id'];
             $this->quote = $row['quote'];
             $this->author = $row['author'];
             $this->category = $row['category'];
-        } catch (Exception $e) {
         }
     }
 
